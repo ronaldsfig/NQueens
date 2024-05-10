@@ -43,12 +43,11 @@ class Graphic:
             self.ax.set_xlim(min(xs), max(xs))
             self.ax.set_ylim(min(ys), max(ys))
             self.ax.set_zlim(min(zs), max(zs))
-            self.ax.set_xlabel('Posição x')
-            self.ax.set_ylabel('Posição y')
+            self.ax.set_xlabel('x tabuleiro')
+            self.ax.set_ylabel('y tabuleiro')
             self.ax.set_zlabel('Afinidade (fit)')
             if self.current_frame > 1:
-                segments = [[(xs[i], ys[i], zs[i]), (xs[i+1], ys[i+1], zs[i+1])]
-                            for i in range(len(xs)-1)]
+                segments = [[(xs[i], ys[i], zs[i]), (xs[i+1], ys[i+1], zs[i+1])] for i in range(len(xs)-1)]
                 lc = Line3DCollection(segments, cmap='YlOrRd_r', alpha=0.9)
                 lc.set_array(np.arange(len(xs)-1))
                 self.ax.add_collection3d(lc)
