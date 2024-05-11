@@ -1,76 +1,65 @@
-import matplotlib.pyplot as plt
+import random
 
 
 class Chessboard:
-    def __init__(self, size=8):
+    def __init__(self, size):
         self.size = size
-        self.board = [[(i + j) % 2 for i in range(size)] for j in range(size)]
-        self.fig, self.ax = plt.subplots()
-        self.ax.set_xticks(range(self.size))
-        self.ax.set_yticks(range(self.size))
-        self.ax.set_xticklabels(range(1, self.size + 1))
-        self.ax.set_yticklabels(range(1, self.size + 1))
-        self.ax.set_aspect('equal')
-        self.im = self.ax.imshow(self.board, cmap='Oranges', origin='lower')
-        self.queens = []
-        self.highlight = None
-        self.finished = False
-        self.current_frame = 0
-        self.num_actions = 0
+        self.board = [None] + [0] * size
 
-    def placeQueen(self, x, y):
-        if not (0 <= x < self.size and 0 <= y < self.size):
-            print("Posição inválida.")
+    def generateFirstPositions(self):
+        for i in range(1, len(self.board)):
+            self.board[i] = i
+
+    def swapPositions(self, x, y):
+        if x < 1 or x > self.size or y < 1 or y > self.size:
+            print("Índice inválido.")
             return
-        queen = self.ax.plot(x, y, marker='o', markersize=20, color='grey')[0]
-        self.queens.append(queen)
 
-    def checkPosition(self, x, y):
-        if not (0 <= x < self.size and 0 <= y < self.size):
-            print("Posição inválida.")
-            return
-        if self.highlight:
-            self.highlight.remove()
-        self.highlight = self.ax.plot(
-            x, y, marker='^', markersize=10, color='blue')[0]
+        self.board[x], self.board[y] = self.board[y], self.board[x]
 
-    def update(self, action):
-        x, y, action_type = action
-        if action_type == 'place':
-            self.placeQueen(x, y)
-        elif action_type == 'check':
-            self.checkPosition(x, y)
-        self.current_frame += 1
-        if self.current_frame >= self.num_actions:
-            self.finished = True
+    def displayChessboard(self):
+        for i in range(1, self.size + 1):
+            row = ""
+            for j in range(1, self.size + 1):
+                if self.board[j] == i:
+                    row += " O "
+                else:
+                    row += " - "
+            print(row)
 
-    def animate(self, action):
-        self.update(action)
-        if self.finished:
-            self.highlight.remove()
-            plt.show()  # Manter o gráfico estático no último quadro
-        else:
-            self.fig.canvas.flush_events()
-            plt.pause(0.5)
+    def fitness(self):
+        for i in range(1, self.size):
+            right_diagonal_a = self.board[i]-i
+            left_diagonal_a = self.board[i]+i
 
+            for j in range(1, self.size):
+                if i != j:
+                    right_diagonal_b = self.board[j]-j
+                    left_diagonal_b = self.board[j]+j
 
-# Test the class
-chessboard = Chessboard()
-actions = [
-    (0, 0, 'place'),
-    (1, 1, 'check'),
-    (2, 2, 'place'),
-    (3, 3, 'check'),
-    (4, 4, 'place'),
-    (5, 5, 'check'),
-    (6, 6, 'place'),
-    (7, 7, 'check'),
-    (3, 3, 'place'),
-    (5, 5, 'check'),
-    (0, 0, 'place'),
-]
+                    if (right_diagonal_a == right_diagonal_b) or (left_diagonal_a == left_diagonal_b):
+                        return True
 
-chessboard.num_actions = len(actions)
+        # depois ver a questao das diagonais extremas
 
-for action in actions:
-    chessboard.animate(action)
+        return False
+
+    def randomPositions(self):
+        x = random.randint(1, self.size)
+        y = random.randint(1, self.size)
+        return x, y
+
+    def disturbance(self):
+        # Método para introduzir uma perturbação no tabuleiro.
+        # Isso pode envolver trocar aleatoriamente duas posições.
+        pass
+
+    def cooling(self, temperature):
+        # Método para reduzir a temperatura do algoritmo de recozimento simulado.
+        # Você precisa implementar a lógica para reduzir a temperatura.
+        pass
+
+    def simulatedAnnealing(self, temperature):
+        # Método principal para executar o algoritmo de recozimento simulado.
+        # Você precisa implementar a lógica para realizar o recozimento simulado.
+        pass
