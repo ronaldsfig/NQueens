@@ -44,7 +44,25 @@ class Chessboard:
         if y == target_y or y == target_x:
             return self.getRandomPosition(target_x, target_y)
         return y
+    
+    """
+    def fitness(self):
+        fit, target_x, target_y = 0, 0, 0
+        for i in range(1, self.size+1):
+            right_diagonal_a = self.board[i]-i
+            left_diagonal_a = self.board[i]+i
 
+            for j in range(i + 1, self.size+1):
+                right_diagonal_b = self.board[j]-j
+                left_diagonal_b = self.board[j]+j
+
+                if (right_diagonal_a == right_diagonal_b) or (left_diagonal_a == left_diagonal_b):
+                    fit += 1
+                    target_x, target_y = i, j
+
+        return fit, target_x, target_y
+    """
+    
     def fitness(self):
         for i in range(1, self.size+1):
             right_diagonal_a = self.board[i]-i
@@ -57,7 +75,7 @@ class Chessboard:
                 if (right_diagonal_a == right_diagonal_b) or (left_diagonal_a == left_diagonal_b):
                     return (self.size * self.size) - (i * j), i, j
 
-        return 0, self.size
+        return 0, 0, 0
 
     def disturbance(self, target_x, target_y):
         random_position = self.getRandomPosition(target_x, target_y)
@@ -79,8 +97,7 @@ class Chessboard:
             if new_solution[1][0] < solution[1][0]:
                 solution = new_solution
             else:
-                probability = math.e ** ((solution[1]
-                                         [0] - new_solution[1][0]) / temperature)
+                probability = math.e ** ((solution[1][0] - new_solution[1][0]) / temperature)
 
                 if (probability - ((random.randint(1, 100))/100) <= 0):
                     solution = new_solution
@@ -121,6 +138,7 @@ class Chessboard:
         
         return board_frames, graphic_frames
 
+""""
 size = 8
 chessboard = Chessboard(size)
 animation = ChessboardAnimation(size)
@@ -142,9 +160,9 @@ for board in board_frames:
     frame += 1
 
 plt.show()
-
 """
-size = 12
+
+size = 10
 chessboard = Chessboard(size)
 
 start = time.time()
@@ -152,4 +170,4 @@ chessboard.simulatedAnnealing(4000)
 print("Runtime in second:", time.time() - start)
 
 chessboard.displayChessboard()
-"""
+
