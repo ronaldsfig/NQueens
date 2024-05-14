@@ -25,6 +25,12 @@ class Chessboard:
     def generateFirstPositions(self):
         for i in range(1, len(self.board)):
             self.board[i] = i
+        self.permute()
+
+    def permute(self):
+        for i in range(self.size, 1, -1):
+            j = random.randint(1, i - 1)
+            self.swapPositions(i, j)
 
     def swapPositions(self, x, y):
         if x < 1 or x > self.size or y < 1 or y > self.size:
@@ -33,31 +39,29 @@ class Chessboard:
         self.board[x], self.board[y] = self.board[y], self.board[x]
         return
 
-    def getRandomPositions(self):
-        x = random.randint(1, self.size)
+    def getRandomPosition(self, target_x, target_y):
         y = random.randint(1, self.size)
-        if x == y:
-            return self.getRandomPositions()
-        return x, y
+        if y == target_y or y == target_x:
+            return self.getRandomPosition(target_x, target_y)
+        return y
 
     def fitness(self):
         for i in range(1, self.size+1):
             right_diagonal_a = self.board[i]-i
             left_diagonal_a = self.board[i]+i
 
-            for j in range(1, self.size+1):
-                if i != j:
-                    right_diagonal_b = self.board[j]-j
-                    left_diagonal_b = self.board[j]+j
+            for j in range(i + 1, self.size+1):
+                right_diagonal_b = self.board[j]-j
+                left_diagonal_b = self.board[j]+j
 
-                    if (right_diagonal_a == right_diagonal_b) or (left_diagonal_a == left_diagonal_b):
-                        return (self.size * self.size) - (i + j)
+                if (right_diagonal_a == right_diagonal_b) or (left_diagonal_a == left_diagonal_b):
+                    return (self.size * self.size) - (i * j), i, j
 
-        return 0
+        return 0, self.size
 
-    def disturbance(self):
-        random_positions = self.getRandomPositions()
-        self.swapPositions(random_positions[0], random_positions[1])
+    def disturbance(self, target_x, target_y):
+        random_position = self.getRandomPosition(target_x, target_y)
+        self.swapPositions(target_y, random_position)
         return
 
     def cooling(self, temperature, iteration):
@@ -68,15 +72,15 @@ class Chessboard:
         solution = [self.board, self.fitness()]
 
         iteration = 1
-        while solution[1] != 0:
-            self.disturbance()
+        while solution[1][0] != 0:
+            self.disturbance(solution[1][1], solution[1][2])
             new_solution = [self.board, self.fitness()]
 
-            if new_solution[1] < solution[1]:
+            if new_solution[1][0] < solution[1][0]:
                 solution = new_solution
             else:
-                probability = math.e ** ((solution[1] -
-                                         new_solution[1]) / temperature)
+                probability = math.e ** ((solution[1]
+                                         [0] - new_solution[1][0]) / temperature)
 
                 if (probability - ((random.randint(1, 100))/100) <= 0):
                     solution = new_solution
@@ -85,6 +89,7 @@ class Chessboard:
 
             temperature = self.cooling(temperature, iteration)
             iteration += 1
+
 
     def simulatedAnnealingVisual(self, temperature):
         board_frames = []
@@ -95,38 +100,33 @@ class Chessboard:
         iteration = 1
         board_frames.append(copy.deepcopy(self.board))
         graphic_frames.append([0, temperature])
-        while solution[1] != 0:
-            self.disturbance()
+        while solution[1][0] != 0:
+            self.disturbance(solution[1][1], solution[1][2])
             new_solution = [self.board, self.fitness()]
+            board_frames.append(copy.deepcopy(self.board))
+            graphic_frames.append([iteration, temperature])
 
-            if new_solution[1] < solution[1]:
+            if new_solution[1][0] < solution[1][0]:
                 solution = new_solution
-                board_frames.append(copy.deepcopy(self.board))
-                graphic_frames.append([iteration, temperature])
             else:
-                probability = math.e ** ((solution[1] -
-                                         new_solution[1]) / temperature)
+                probability = math.e ** ((solution[1][0] - new_solution[1][0]) / temperature)
 
                 if (probability - ((random.randint(1, 100))/100) <= 0):
                     solution = new_solution
-                    board_frames.append(copy.deepcopy(self.board))
-                    graphic_frames.append([iteration, temperature])
                 else:
                     self.board = solution[0]
 
             temperature = self.cooling(temperature, iteration)
             iteration += 1
-
+        
         return board_frames, graphic_frames
 
-"""
 size = 8
 chessboard = Chessboard(size)
 animation = ChessboardAnimation(size)
 animation2 = TemperatureAnimation()
 
-frames = chessboard.simulatedAnnealingVisual(100000)
-chessboard.displayChessboard()
+frames = chessboard.simulatedAnnealingVisual(4000)
 
 board_frames = frames[0]
 graphic_frames = frames[1]
@@ -142,11 +142,14 @@ for board in board_frames:
     frame += 1
 
 plt.show()
-"""
 
-size = 8
+"""
+size = 12
 chessboard = Chessboard(size)
 
 start = time.time()
 chessboard.simulatedAnnealing(4000)
 print("Runtime in second:", time.time() - start)
+
+chessboard.displayChessboard()
+"""

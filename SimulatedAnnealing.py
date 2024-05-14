@@ -3,7 +3,7 @@ from math import exp
 import time
 from copy import deepcopy
 
-N_QUEENS = 8
+N_QUEENS = 4
 TEMPERATURE = 4000
 
 
