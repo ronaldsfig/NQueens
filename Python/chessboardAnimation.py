@@ -15,7 +15,7 @@ class ChessboardAnimation:
 
         self.ax.clear()
         self.ax.imshow(self.board, cmap='binary', origin='upper')
-        self.ax.set_title('Chessboard')
+        self.ax.set_title('Tabuleiro')
         self.ax.set_xticks(np.arange(-0.5, self.size, 1))
         self.ax.set_yticks(np.arange(-0.5, self.size, 1))
         self.ax.grid(color='black', linestyle='-', linewidth=1)
