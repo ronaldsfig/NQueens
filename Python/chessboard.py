@@ -4,6 +4,7 @@ from chessboardAnimation import ChessboardAnimation
 from temperatureAnimation import TemperatureAnimation
 import matplotlib.pyplot as plt
 import copy
+import time
 
 
 class Chessboard:
@@ -83,7 +84,6 @@ class Chessboard:
                     self.board = solution[0]
 
             temperature = self.cooling(temperature, iteration)
-            print(temperature)
             iteration += 1
 
     def simulatedAnnealingVisual(self, temperature):
@@ -119,7 +119,7 @@ class Chessboard:
 
         return board_frames, graphic_frames
 
-
+"""
 size = 8
 chessboard = Chessboard(size)
 animation = ChessboardAnimation(size)
@@ -142,3 +142,11 @@ for board in board_frames:
     frame += 1
 
 plt.show()
+"""
+
+size = 8
+chessboard = Chessboard(size)
+
+start = time.time()
+chessboard.simulatedAnnealing(4000)
+print("Runtime in second:", time.time() - start)
