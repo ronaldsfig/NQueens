@@ -3,7 +3,7 @@ from math import exp
 import time
 from copy import deepcopy
 
-N_QUEENS = 4
+N_QUEENS = 12
 TEMPERATURE = 4000
 
 
@@ -88,10 +88,12 @@ def simulated_annealing():
             cost_answer = cost(answer)
         if cost_answer == 0:
             solution_found = True
-            #print_chess_board(answer)
+            # print_chess_board(answer)
             break
     if solution_found is False:
         print("Failed")
+    else:
+        print_chess_board(answer)
 
 
 def print_chess_board(board):
