@@ -13,11 +13,9 @@ class ChessboardWithAnimation(Chessboard):
         self.board_frames = []
         self.graphic_frames = []
 
-
     def updateFrames(self, iteration, temperature, fitness):
         self.board_frames.append(copy.deepcopy(self.board))
         self.graphic_frames.append([iteration, temperature, fitness])
-
 
     def simulatedAnnealing(self, temperature):
         self.generateFirstPositions()
@@ -26,7 +24,7 @@ class ChessboardWithAnimation(Chessboard):
         self.updateFrames(0, temperature, solution[1])
         iteration = 1
         while solution[1] > 0:
-            temperature *= (0.99 ** iteration)
+            temperature *= 0.99
 
             while True:
                 queen_x = random.randrange(1, self.size)
@@ -34,7 +32,7 @@ class ChessboardWithAnimation(Chessboard):
 
                 if queen_x != queen_y:
                     break
-            
+
             self.board[queen_x], self.board[queen_y] = self.board[queen_y], self.board[queen_x]
 
             new_solution = [copy.deepcopy(self.board), self.fitness()]
@@ -44,8 +42,9 @@ class ChessboardWithAnimation(Chessboard):
                 solution = new_solution
                 self.updateFrames(iteration, temperature, solution[1])
             else:
-                probability = random.uniform(0, 1) < math.exp(-delta / temperature)
-                
+                probability = random.uniform(
+                    0, 1) < math.exp(-delta / temperature)
+
                 if probability:
                     solution = new_solution
                     self.updateFrames(iteration, temperature, solution[1])
@@ -54,11 +53,11 @@ class ChessboardWithAnimation(Chessboard):
                     self.updateFrames(iteration, temperature, solution[1])
 
             iteration += 1
-        
-        return self.board_frames, self.graphic_frames
-    
 
-size = 8
+        return self.board_frames, self.graphic_frames
+
+
+size = 6
 chessboard = ChessboardWithAnimation(size)
 chessboard_animation = ChessboardAnimation(size)
 temperature_animation = GraphicAnimation(

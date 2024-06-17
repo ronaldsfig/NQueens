@@ -1,7 +1,7 @@
 from chessboard import Chessboard
 import time
 
-size = 64
+size = 8
 runs = 10
 average = 0
 

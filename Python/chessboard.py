@@ -30,12 +30,12 @@ class Chessboard:
             row += 1
 
 
-    def threatCalculate(self, n):
-        if n < 2:
+    def threatCalculate(self, x):
+        if x < 2:
             return 0
-        if n == 2:
+        if x == 2:
             return 1
-        return (n - 1) * n / 2
+        return (x - 1) * x / 2
 
 
     def fitness(self):
@@ -72,7 +72,7 @@ class Chessboard:
 
         iteration = 1
         while solution[1] > 0:
-            temperature *= (0.99 ** iteration)
+            temperature *= (0.99 ** iteration) + 1
 
             while True:
                 queen_x = random.randrange(1, self.size)
