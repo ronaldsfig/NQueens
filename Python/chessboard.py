@@ -72,7 +72,7 @@ class Chessboard:
 
         iteration = 1
         while solution[1] > 0:
-            temperature *= (0.99 ** iteration) + 1
+            temperature = (temperature * (0.99 ** iteration)) + 0.1
 
             while True:
                 queen_x = random.randrange(1, self.size)

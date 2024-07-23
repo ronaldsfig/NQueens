@@ -24,7 +24,7 @@ class ChessboardWithAnimation(Chessboard):
         self.updateFrames(0, temperature, solution[1])
         iteration = 1
         while solution[1] > 0:
-            temperature *= 0.99
+            temperature = (temperature * (0.99 ** iteration)) + 0.1
 
             while True:
                 queen_x = random.randrange(1, self.size)
@@ -57,7 +57,7 @@ class ChessboardWithAnimation(Chessboard):
         return self.board_frames, self.graphic_frames
 
 
-size = 6
+size = 8
 chessboard = ChessboardWithAnimation(size)
 chessboard_animation = ChessboardAnimation(size)
 temperature_animation = GraphicAnimation(
@@ -69,6 +69,7 @@ frames = chessboard.simulatedAnnealing(4000)
 
 board_frames = frames[0]
 graphic_frames = frames[1]
+print("Tempo: ",len(board_frames))
 
 frame = 0
 for board in board_frames:
